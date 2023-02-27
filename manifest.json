@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "PrayerTimes",
+  "version": "1.0",
+  "description": "This is my extension",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ]
+}

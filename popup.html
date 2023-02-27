@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>My Extension</title>
+  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+  <script src="hello.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <h2>Prayer Times Reminder</h2>
+    <hr />
+  </div>
+
+  <div class="row-fluid">
+    <label for="cities-selector"></label><select class="selectpicker" data-show-subtext="true" onchange="handleCitySelectorChange(this)" data-live-search="true" id="cities-selector">
+    </select>
+    <span class="help-inline">With <code>data-show-subtext="true" data-live-search="true"</code>. Try searching for california</span>
+  </div>
+</div>
+<div class="container">
+
+
+  <p> <span id="remaining-time" class="text-3xl font-bold underline"></span> remaining till the next prayer <span id="next-prayer-time" style="font-weight:800"></span></p>
+</div>
+<script>
+
+  // Call the updateRemainingTime function every minute
+</script>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+</html>

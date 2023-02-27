@@ -1,0 +1,7 @@
+{
+  "name": "prayerReminder",
+  "version": "1.0.0",
+  "devDependencies": {
+    "tailwindcss": "^3.2.7"
+  }
+}
