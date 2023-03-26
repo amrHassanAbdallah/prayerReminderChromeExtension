@@ -69,8 +69,13 @@ function fillTheCitySelector() {
 }
 
 function handleCitySelectorChange(e) {
-    console.log("hamda", e.value)
+    console.log("hamda", e.target.value)
+    chrome.storage.local.set({selectedValue: e.target.value}, function() {
+        console.log('Value stored in local storage');
+    });
     getTheTimes(e.value)
+
+
 }
 
 window.onload = function () {
@@ -78,6 +83,14 @@ window.onload = function () {
     setInterval(updateRemainingTime, 60 * 1000);
 
     fillTheCitySelector();
+    chrome.storage.local.get(['selectedValue'], function(result) {
+        console.log('Value retrieved from local storage:', result.selectedValue);
+        document.getElementById("temp-holder").innerText = result.selectedValue
+    });
+    document.getElementById('cities-selector').onchange = (event)=>{
+        console.log("yoooooooooooooooo",event, event.target.value)
+        handleCitySelectorChange(event)
+    }
 
 }
 
