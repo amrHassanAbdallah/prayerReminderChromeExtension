@@ -8,32 +8,26 @@ let supportedLocations = {
     "South America": ["Buenos Aires, Argentina", "Caracas, Venezuela", "Lima, Peru", "Mexico City, Mexico", "Santiago, Chile", "Sao Paulo, Brazil"]
 }
 
+async function getPrayerTimes() {
+    return await getValueFromStorage(["prayerTimes"]) || []
+}
+
 //
-function updateRemainingTime() {
+async function updateRemainingTime() {
     // Get the current time in milliseconds since epoch
     const now = new Date().getTime();
 
     // Find the next prayer time after the current time
     let nextPrayerTime = null
-    let prayerTimes = {
-        "Fajr": "04:55",
-        "Sunrise": "06:22",
-        "Dhuhr": "12:06",
-        "Asr": "15:22",
-        "Sunset": "17:50",
-        "Maghrib": "17:50",
-        "Isha": "19:20",
-        "Imsak": "04:45",
-        "Midnight": "00:06",
-        "Firstthird": "22:01",
-        "Lastthird": "02:11"
-    };
-    for (let prayer in prayerTimes) {
+    let nextPrayerName = null
+    let prayerTimes = await getPrayerTimes();
+    for (let prayer of prayerTimes) {
         const prayerTime = new Date();
-        const [hours, minutes] = prayerTimes[prayer].split(":");
+        const [hours, minutes] = prayer.timing.split(":");
         prayerTime.setHours(hours, minutes);
         if (prayerTime.getTime() > now) {
             nextPrayerTime = prayerTime;
+            nextPrayerName = prayer.name
             break;
         }
     }
@@ -53,6 +47,8 @@ function updateRemainingTime() {
     const remainingTimeElement = document.getElementById("remaining-time");
     remainingTimeElement.innerText = `${remainingMinutes} minutes`;
     document.getElementById('next-prayer-time').innerText = `(${nextPrayerTime.toLocaleTimeString()})`
+    document.getElementById('next-prayer-name').innerText = `(${nextPrayerName})`
+    chrome.browserAction.setBadgeText({text: ''+remainingMinutes});
 }
 
 function fillTheCitySelector() {
@@ -69,15 +65,24 @@ function fillTheCitySelector() {
 }
 
 function handleCitySelectorChange(e) {
-    console.log("hamda", e.target.value)
-    chrome.storage.local.set({selectedValue: e.target.value}, function() {
+    const value = e.target.value
+    console.log("hamda", value)
+    chrome.storage.local.set({selectedValue: value}, function() {
         console.log('Value stored in local storage');
     });
-    getTheTimes(e.value)
+    getTheTimes(value)
 
 
 }
 
+function getValueFromStorage(key){
+    return new Promise((resolve, reject)=>{
+        chrome.storage.local.get(key, function(result) {
+            console.log(key+' retrieved from local storage:', result[key]);
+            resolve(result[key])
+        });
+    })
+}
 window.onload = function () {
     updateRemainingTime();
     setInterval(updateRemainingTime, 60 * 1000);
@@ -102,6 +107,20 @@ function getTheTimes(location) {
         .then((result) => {
             console.log("Success:", result);
             console.log(JSON.stringify(result.data.timings))
+            let times = [];
+            for (let prayer in result.data.timings) {
+                times.push({
+                    name: prayer,
+                    timing: result.data.timings[prayer]
+                })
+            }
+            times.sort((a,b)=> a.timing > b.timing)
+            console.log(times, "yoooooo the sorted data")
+
+            chrome.storage.local.set({prayerTimes: times}, function() {
+                console.log('prayerTimes stored in local storage');
+                updateRemainingTime()
+            });
         })
 }
 
