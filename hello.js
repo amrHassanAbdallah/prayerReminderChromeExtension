@@ -21,7 +21,7 @@ async function updateRemainingTime() {
     document.getElementById('next-prayer-name').innerText = `(${nextPrayerName})`
 }
 
-function fillTheCitySelector() {
+async function fillTheCitySelector() {
     const selector = document.getElementById("cities-selector")
     let selectorContent = `<option>Nothing selected</option>`
     for (let group in supportedLocations) {
@@ -32,6 +32,7 @@ function fillTheCitySelector() {
         selectorContent += `<optgroup label="${group}">${options}</optgroup>`
     }
     selector.innerHTML = selectorContent
+
 }
 
 function handleCitySelectorChange(e) {
@@ -45,15 +46,35 @@ function handleCitySelectorChange(e) {
 }
 
 
+async function setThelocationIfSelected() {
+    const location = await getValueFromStorage(Config.selectedLocation)
+    if (location){
+        document.querySelector('[data-id="cities-selector"] span').innerText = location
+
+    }
+}
+
+async function fillPrayersTimings() {
+    const tbody = document.querySelector('#prayerTimingsTable tbody')
+    let tempHolder = ``
+    const prayerTimings = await getPrayerTimes()
+    for (let prayer of prayerTimings){
+        tempHolder += `<tr>
+            <td>${prayer.name}</td>
+            <td>${prayer.timing}</td>
+        </tr>`
+    }
+    tbody.innerHTML = tempHolder
+}
+
 window.onload = function () {
     updateRemainingTime();
     setInterval(updateRemainingTime, 60 * 1000);
 
     fillTheCitySelector();
-    chrome.storage.local.get(['selectedValue'], function(result) {
-        console.log('Value retrieved from local storage:', result.selectedValue);
-        document.getElementById("temp-holder").innerText = result.selectedValue
-    });
+    setThelocationIfSelected();
+    fillPrayersTimings();
+
     document.getElementById('cities-selector').onchange = (event)=>{
         console.log("yoooooooooooooooo",event, event.target.value)
         handleCitySelectorChange(event)
