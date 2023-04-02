@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>My Extension</title>
-  <link href="./styles.css" rel="stylesheet">
-  <link href="./bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="./bootstrap-select.min.css" />
-  <script src="hello.js"></script>
+    <title>My Extension</title>
+    <link href="./styles.css" rel="stylesheet">
+    <link href="./bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./bootstrap-select.min.css"/>
+    <script src="hello.js"></script>
+    <script src="common.js"></script>
 </head>
 <body>
 <div class="container">
-  <div class="row">
-    <h2>Prayer Times Reminder</h2>
-    <hr />
-  </div>
-  <h4 id="temp-holder"></h4>
-  <div class="row-fluid">
-    <label for="cities-selector"></label><select class="selectpicker" data-show-subtext="true" data-live-search="true" id="cities-selector">
+    <div class="row">
+        <h2>Prayer Times Reminder</h2>
+        <hr/>
+    </div>
+    <h4 id="temp-holder"></h4>
+    <div class="row-fluid">
+        <label for="cities-selector"></label><select class="selectpicker" data-show-subtext="true"
+                                                     data-live-search="true" id="cities-selector">
     </select>
-    <span class="help-inline">With <code>data-show-subtext="true" data-live-search="true"</code>. Try searching for california</span>
-  </div>
+        <span class="help-inline"> Try searching for cairo</span>
+    </div>
 </div>
 <div class="container">
 
 
-  <p> <span id="remaining-time" class="text-3xl font-bold underline"></span> remaining till the next prayer <span id="next-prayer-name" style="font-weight:800"></span> <span id="next-prayer-time" style="font-weight:800"></span></p>
+    <p><span id="remaining-time" class="text-3xl font-bold underline"></span> remaining till the next prayer <span
+            id="next-prayer-name" style="font-weight:800"></span> <span id="next-prayer-time"
+                                                                        style="font-weight:800"></span></p>
 </div>
 </body>
 <script src="./jquery.min.js"></script>

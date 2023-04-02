@@ -8,47 +8,17 @@ let supportedLocations = {
     "South America": ["Buenos Aires, Argentina", "Caracas, Venezuela", "Lima, Peru", "Mexico City, Mexico", "Santiago, Chile", "Sao Paulo, Brazil"]
 }
 
-async function getPrayerTimes() {
-    return await getValueFromStorage(["prayerTimes"]) || []
-}
+
 
 //
 async function updateRemainingTime() {
     // Get the current time in milliseconds since epoch
-    const now = new Date().getTime();
-
-    // Find the next prayer time after the current time
-    let nextPrayerTime = null
-    let nextPrayerName = null
-    let prayerTimes = await getPrayerTimes();
-    for (let prayer of prayerTimes) {
-        const prayerTime = new Date();
-        const [hours, minutes] = prayer.timing.split(":");
-        prayerTime.setHours(hours, minutes);
-        if (prayerTime.getTime() > now) {
-            nextPrayerTime = prayerTime;
-            nextPrayerName = prayer.name
-            break;
-        }
-    }
-    if (nextPrayerTime == null) {
-        const prayerTime = new Date(new Date().getTime() + (24 * 60 * 60 * 1000));
-        const [hours, minutes] = prayerTimes[0].split(":");
-        prayerTime.setHours(hours, minutes);
-        nextPrayerTime = prayerTime;
-        console.log(prayerTime, nextPrayerTime)
-    }
-
-
-    // Calculate the time remaining till the next prayer
-    const remainingMinutes = Math.round((nextPrayerTime.getTime() - now) / (1000 * 60));
-
+    let {nextPrayerTime, nextPrayerName, remainingMinutes} = await getTheNextPrayer();
     // Update the HTML page with the remaining minutes
     const remainingTimeElement = document.getElementById("remaining-time");
     remainingTimeElement.innerText = `${remainingMinutes} minutes`;
     document.getElementById('next-prayer-time').innerText = `(${nextPrayerTime.toLocaleTimeString()})`
     document.getElementById('next-prayer-name').innerText = `(${nextPrayerName})`
-    chrome.browserAction.setBadgeText({text: ''+remainingMinutes});
 }
 
 function fillTheCitySelector() {
@@ -71,18 +41,10 @@ function handleCitySelectorChange(e) {
         console.log('Value stored in local storage');
     });
     getTheTimes(value)
-
-
+    updateRemainingTime()
 }
 
-function getValueFromStorage(key){
-    return new Promise((resolve, reject)=>{
-        chrome.storage.local.get(key, function(result) {
-            console.log(key+' retrieved from local storage:', result[key]);
-            resolve(result[key])
-        });
-    })
-}
+
 window.onload = function () {
     updateRemainingTime();
     setInterval(updateRemainingTime, 60 * 1000);
@@ -99,39 +61,3 @@ window.onload = function () {
 
 }
 
-function getTheTimes(location) {
-    let [city, country] = location.split(", ")
-    let url = `https://api.aladhan.com/v1/timingsByCity/${getTimingsByCity()}?city=${city}&country=${location}&method=8`
-    console.log(url)
-    fetch(url).then((response) => response.json())
-        .then((result) => {
-            console.log("Success:", result);
-            console.log(JSON.stringify(result.data.timings))
-            let times = [];
-            for (let prayer in result.data.timings) {
-                times.push({
-                    name: prayer,
-                    timing: result.data.timings[prayer]
-                })
-            }
-            times.sort((a,b)=> a.timing > b.timing)
-            console.log(times, "yoooooo the sorted data")
-
-            chrome.storage.local.set({prayerTimes: times}, function() {
-                console.log('prayerTimes stored in local storage');
-                updateRemainingTime()
-            });
-        })
-}
-
-function getTimingsByCity() {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1; // Months start at 0!
-    let dd = today.getDate();
-
-    if (dd < 10) dd = '0' + dd;
-    if (mm < 10) mm = '0' + mm;
-
-    return dd + '-' + mm + '-' + yyyy;
-}
