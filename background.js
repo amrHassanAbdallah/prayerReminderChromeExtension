@@ -14,7 +14,20 @@ async function checkIfCacheNeedsToBeUpdated() {
 async function updateBackground() {
     await checkIfCacheNeedsToBeUpdated()
     let {nextPrayerTime, nextPrayerName, remainingMinutes} = await getTheNextPrayer();
-    chrome.browserAction.setBadgeText({text: '' + remainingMinutes});
+    if (remainingMinutes <= 60){
+        chrome.browserAction.setBadgeText({text: '' + remainingMinutes});
+        switch (true) {
+            case remainingMinutes >= 40:
+                chrome.browserAction.setBadgeBackgroundColor({ color: [60, 179, 113, 255] })
+                break
+            case remainingMinutes >= 20:
+                chrome.browserAction.setBadgeBackgroundColor({ color: [255, 165, 0, 255] })
+                break
+            default:
+                chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] })
+                break
+        }
+    }
 }
 
 updateBackground()
