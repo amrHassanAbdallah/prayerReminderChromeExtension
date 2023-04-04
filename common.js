@@ -19,7 +19,9 @@ function getValueFromStorage(key) {
 
 async function set(key, value) {
     return new Promise((resolve, reject) => {
-        chrome.storage.local.set({key: value}, function () {
+        let result = {}
+        result[key] = value;
+        chrome.storage.local.set(result, function () {
             console.log(key + ' stored in local storage');
             resolve()
         });
