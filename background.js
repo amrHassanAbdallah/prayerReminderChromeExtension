@@ -4,8 +4,7 @@ async function checkIfCacheNeedsToBeUpdated() {
     let selectedLocation = await getValueFromStorage(Config.selectedLocation)
     console.log(selectedLocation, prayerTimesForDay, "check the cache")
     // if it's not set or not today
-    var nowDate = new Date();
-    var date = nowDate.getFullYear() + '/' + (nowDate.getMonth() + 1) + '/' + nowDate.getDate();
+    var date = getTodayDate()
     if (selectedLocation && prayerTimesForDay != date) {
         await getTheTimes(selectedLocation)
     }
