@@ -35,14 +35,16 @@ async function fillTheCitySelector() {
 
 }
 
-function handleCitySelectorChange(e) {
+async function handleCitySelectorChange(e) {
     const value = e.target.value
     console.log("hamda", value)
-    chrome.storage.local.set({selectedValue: value}, function() {
+    chrome.storage.local.set({selectedValue: value}, function () {
         console.log('Value stored in local storage');
     });
-    getTheTimes(value)
-    updateRemainingTime()
+    await getTheTimes(value)
+    await setThelocationIfSelected()
+    await fillPrayersTimings()
+    await updateRemainingTime()
 }
 
 
