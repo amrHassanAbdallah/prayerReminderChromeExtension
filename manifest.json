@@ -12,9 +12,10 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "background.js"
+    "script": "background.js"
   },
   "permissions": [
+    "alarms",
     "storage",
     "activeTab",
     "scripting",

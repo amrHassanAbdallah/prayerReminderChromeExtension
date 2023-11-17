@@ -1,14 +1,13 @@
-async function checkIfCacheNeedsToBeUpdated() {
-    //get the current cache time
-    let prayerTimesForDay = await getValueFromStorage(Config.prayerTimesForDay)
-    let selectedLocation = await getValueFromStorage(Config.selectedLocation)
-    console.log(selectedLocation, prayerTimesForDay, "check the cache")
-    // if it's not set or not today
-    var date = getTodayDate()
-    if (selectedLocation && prayerTimesForDay != date) {
-        await getTheTimes(selectedLocation)
-    }
+
+
+async function startAlarm(name, duration) {
+    await chrome.alarms.create(name, { delayInMinutes: 0.100 });
 }
+
+chrome.alarms.onAlarm.addListener(() => {
+    updateBackground()
+});
+
 
 async function updateBackground() {
     await checkIfCacheNeedsToBeUpdated()
@@ -32,4 +31,3 @@ async function updateBackground() {
 }
 
 updateBackground()
-setInterval(updateBackground, 60 * 1000)
