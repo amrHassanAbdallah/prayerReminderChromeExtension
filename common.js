@@ -79,7 +79,7 @@ async function getTheNextPrayer() {
             break;
         }
     }
-    if (nextPrayerTime == null && prayerTimes.length > 0) {
+    if (nextPrayerTime == null) {
         const prayerTime = new Date(new Date().getTime() + (24 * 60 * 60 * 1000));
         const [hours, minutes] = prayerTimes[0].split(":");
         prayerTime.setHours(hours, minutes);
