@@ -56,6 +56,8 @@ async function updateBadge() {
                 color = Colors.Red
         }
         setBadge(color, remainingMinutes)
+    }else{
+        setBadge("","")
     }
 
 }
