@@ -17,7 +17,7 @@ chrome.alarms.onAlarm.addListener(alarm => {
 
 async function checkIfCacheNeedsToBeUpdated() {
     //get the current cache time
-    let prayerTimesForDay = await getValueFromStorage(Config.prayerTimesForDay)
+    let prayerTimesForDay = await getValueFromStorage(Config.prayersDay)
     let selectedLocation = await getValueFromStorage(Config.selectedLocation)
     console.log(selectedLocation, prayerTimesForDay, "check the cache")
     // if it's not set or not today

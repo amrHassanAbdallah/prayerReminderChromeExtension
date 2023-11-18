@@ -1,10 +1,11 @@
 const Config = {
+    prayerTimesData: "prayerTimes",
     selectedLocation: "selectedValue",
-    prayerTimesForDay: "prayerTimesForDay",
+    prayersDay: "prayerTimesForDay",
 };
 
 async function getPrayerTimes() {
-    return await getValueFromStorage(Config.prayerTimesForDay) || []
+    return await getValueFromStorage(Config.prayerTimesData) || []
 }
 
 function getValueFromStorage(key) {
@@ -15,9 +16,6 @@ function getValueFromStorage(key) {
         });
     })
 }
-
-
-
 
 async function set(key, value) {
     return new Promise((resolve, reject) => {
@@ -47,7 +45,8 @@ async function getTheTimes(location) {
             }
             times.sort((a, b) => a.timing > b.timing)
             console.log(times, "yoooooo the sorted data")
-            await set(Config.prayerTimesForDay, getTodayDate())
+            await set(Config.prayerTimesData, times)
+            await set(Config.prayersDay, getTodayDate())
         })
 }
 
@@ -82,10 +81,9 @@ async function getTheNextPrayer() {
     }
     if (nextPrayerTime == null) {
         const prayerTime = new Date(new Date().getTime() + (24 * 60 * 60 * 1000));
-        const [hours, minutes] = prayerTimes[0].timing.split(":");
+        const [hours, minutes] = prayerTimes[0].split(":");
         prayerTime.setHours(hours, minutes);
         nextPrayerTime = prayerTime;
-        nextPrayerName = prayerTimes[0].name
         console.log(prayerTime, nextPrayerTime)
     }
 
