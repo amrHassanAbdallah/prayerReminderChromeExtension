@@ -1,24 +1,27 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "PrayerTimes",
-  "version": "1.4",
-  "description": "This is my extension",
-  "content_security_policy": "script-src 'self' 'unsafe-inline' blob: filesystem:;",
+  "version": "2.1",
+  "description": "An extension to remind you about the prayer times",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "browser_action": {
+  "action": {
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["common.js","background.js" ]
+    "service_worker": "background.js"
   },
   "permissions": [
-    "activeTab",
+    "alarms",
     "storage",
+    "activeTab",
     "scripting",
     "https://api.aladhan.com/*"
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }

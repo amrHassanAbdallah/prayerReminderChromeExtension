@@ -1,3 +1,7 @@
+
+
+/// Rest
+
 let supportedLocations = {
     "Africa": ["Algiers, Algeria", "Capetown, South Africa", "Casablanca, Morocco", "Fez, Morocco", "Johannesburg, South Africa", "Lagos, Nigeria", "Marrakech, Morocco", "Rabat, Morocco", "Tunis, Tunisia"],
     "Asia": ["Astana, Kazakhstan", "Beijing, China", "Chennai, India", "Colombo, Sri Lanka", "Dhaka, Bangladesh", "Hong Kong, China", "Islamabad, Pakistan", "Jakarta, Indonesia", "Kabul, Afghanistan", "Karachi, Pakistan", "Lahore, Pakistan", "Makhachkala, Dagestan", "Mumbai, India", "New Dellhi, India", "Samarkand, Uzbekistan", "Seoul, South Korea", "Shanghai, China", "Singapore", "Taipei, Taiwan", "Tashkent, Uzbekistan", "Tokyo, Japan", "Ulaanbaatar, Mongolia"],
@@ -68,17 +72,19 @@ async function fillPrayersTimings() {
 }
 
 window.onload = function () {
-    updateRemainingTime();
-    setInterval(updateRemainingTime, 60 * 1000);
+
 
     fillTheCitySelector();
     setThelocationIfSelected();
     fillPrayersTimings();
-
+    updateRemainingTime();
+    setInterval(updateRemainingTime, 60 * 1000);
     document.getElementById('cities-selector').onchange = (event)=>{
         console.log("yoooooooooooooooo",event, event.target.value)
         handleCitySelectorChange(event)
     }
 
 }
+
+
 

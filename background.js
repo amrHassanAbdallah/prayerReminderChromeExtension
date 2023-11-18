@@ -1,6 +1,23 @@
+// background.js
+importScripts('./common.js');
+
+chrome.runtime.onInstalled.addListener(() => {
+    // Schedule the alarm to trigger every 1 minute (adjust the delay as needed)
+    chrome.alarms.create("badgeUpdateAlarm", { periodInMinutes: 1 });
+});
+
+chrome.alarms.onAlarm.addListener(alarm => {
+    if (alarm.name === "badgeUpdateAlarm") {
+        // Call your function to update the badge here
+        console.log("updating the badge........")
+        updateBadge();
+    }
+});
+
+
 async function checkIfCacheNeedsToBeUpdated() {
     //get the current cache time
-    let prayerTimesForDay = await getValueFromStorage(Config.prayerTimesForDay)
+    let prayerTimesForDay = await getValueFromStorage(Config.prayersDay)
     let selectedLocation = await getValueFromStorage(Config.selectedLocation)
     console.log(selectedLocation, prayerTimesForDay, "check the cache")
     // if it's not set or not today
@@ -10,26 +27,37 @@ async function checkIfCacheNeedsToBeUpdated() {
     }
 }
 
-async function updateBackground() {
+const Colors = {
+    Green: [60, 179, 113, 255],
+    Yellow: [255, 165, 0, 255],
+    Red: [255, 0, 0, 255],
+};
+
+
+function setBadge(color, time){
+    chrome.action.setBadgeText({ text: '' + time });
+    chrome.action.setBadgeBackgroundColor({ color: color });
+}
+
+async function updateBadge() {
+    console.log("inside the update background",chrome.browserAction)
     await checkIfCacheNeedsToBeUpdated()
     let {nextPrayerTime, nextPrayerName, remainingMinutes} = await getTheNextPrayer();
     if (remainingMinutes <= 60){
-        chrome.browserAction.setBadgeText({text: '' + remainingMinutes});
+        let color;
         switch (true) {
             case remainingMinutes >= 40:
-                chrome.browserAction.setBadgeBackgroundColor({ color: [60, 179, 113, 255] })
-                break
+                color = Colors.Green
+                break;
             case remainingMinutes >= 20:
-                chrome.browserAction.setBadgeBackgroundColor({ color: [255, 165, 0, 255] })
-                break
+                color = Colors.Yellow
+                break;
             default:
-                chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] })
-                break
+                color = Colors.Red
         }
-    }else{
-        chrome.browserAction.setBadgeText({text: ''})
+        setBadge(color, remainingMinutes)
     }
+
 }
 
-updateBackground()
-setInterval(updateBackground, 60 * 1000)
+updateBadge()

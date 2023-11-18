@@ -1,11 +1,11 @@
 const Config = {
-    prayerTimes: "prayerTimes",
+    prayerTimesData: "prayerTimes",
     selectedLocation: "selectedValue",
-    prayerTimesForDay: "prayerTimesForDay",
+    prayersDay: "prayerTimesForDay",
 };
 
 async function getPrayerTimes() {
-    return await getValueFromStorage("prayerTimes") || []
+    return await getValueFromStorage(Config.prayerTimesData) || []
 }
 
 function getValueFromStorage(key) {
@@ -45,8 +45,8 @@ async function getTheTimes(location) {
             }
             times.sort((a, b) => a.timing > b.timing)
             console.log(times, "yoooooo the sorted data")
-            await set(Config.prayerTimes, times)
-            await set(Config.prayerTimesForDay, getTodayDate())
+            await set(Config.prayerTimesData, times)
+            await set(Config.prayersDay, getTodayDate())
         })
 }
 
