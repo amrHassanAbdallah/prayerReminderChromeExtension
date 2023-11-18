@@ -39,6 +39,14 @@ async function fillTheCitySelector() {
 
 }
 
+function controlTheHintedSearch(IsVisible){
+    console.log("inside the control hinted ",IsVisible)
+    let mode = "none"
+    if (IsVisible){
+        mode = "inline-block"
+    }
+    document.getElementById("suggestion-hint").style.display = mode
+}
 function handleCitySelectorChange(e) {
     const value = e.target.value
     console.log("hamda", value)
@@ -46,7 +54,8 @@ function handleCitySelectorChange(e) {
         console.log('Value stored in local storage');
     });
     getTheTimes(value)
-    updateRemainingTime()
+    controlTheHintedSearch(false)
+    repopulate();
 }
 
 
@@ -54,7 +63,9 @@ async function setThelocationIfSelected() {
     const location = await getValueFromStorage(Config.selectedLocation)
     if (location){
         document.querySelector('[data-id="cities-selector"] span').innerText = location
-
+        controlTheHintedSearch(false)
+    }else{
+        controlTheHintedSearch(true)
     }
 }
 
@@ -71,13 +82,15 @@ async function fillPrayersTimings() {
     tbody.innerHTML = tempHolder
 }
 
-window.onload = function () {
-
-
+function repopulate() {
     fillTheCitySelector();
     setThelocationIfSelected();
     fillPrayersTimings();
     updateRemainingTime();
+}
+
+window.onload = function () {
+    repopulate();
     setInterval(updateRemainingTime, 60 * 1000);
     document.getElementById('cities-selector').onchange = (event)=>{
         console.log("yoooooooooooooooo",event, event.target.value)

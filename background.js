@@ -36,7 +36,9 @@ const Colors = {
 
 function setBadge(color, time){
     chrome.action.setBadgeText({ text: '' + time });
-    chrome.action.setBadgeBackgroundColor({ color: color });
+    if (color){
+        chrome.action.setBadgeBackgroundColor({ color: color });
+    }
 }
 
 async function updateBadge() {
@@ -57,7 +59,7 @@ async function updateBadge() {
         }
         setBadge(color, remainingMinutes)
     }else{
-        setBadge("","")
+        setBadge(null,"")
     }
 
 }

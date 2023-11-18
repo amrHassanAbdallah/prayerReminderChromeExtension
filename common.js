@@ -3,6 +3,13 @@ const Config = {
     selectedLocation: "selectedValue",
     prayersDay: "prayerTimesForDay",
 };
+ const FocusedPrayers = {
+     Fajr:"Fajr",
+     Dhuhr:"Dhuhr",
+     Asr:"Asr",
+     Maghrib:"Maghrib",
+     Isha:"Isha",
+ }
 
 async function getPrayerTimes() {
     return await getValueFromStorage(Config.prayerTimesData) || []
@@ -38,10 +45,12 @@ async function getTheTimes(location) {
             console.log(JSON.stringify(result.data.timings))
             let times = [];
             for (let prayer in result.data.timings) {
-                times.push({
-                    name: prayer,
-                    timing: result.data.timings[prayer]
-                })
+                if (FocusedPrayers[prayer]){
+                    times.push({
+                        name: prayer,
+                        timing: result.data.timings[prayer]
+                    })
+                }
             }
             times.sort((a, b) => a.timing > b.timing)
             console.log(times, "yoooooo the sorted data")
@@ -81,9 +90,10 @@ async function getTheNextPrayer() {
     }
     if (nextPrayerTime == null) {
         const prayerTime = new Date(new Date().getTime() + (24 * 60 * 60 * 1000));
-        const [hours, minutes] = prayerTimes[0].split(":");
+        const [hours, minutes] = prayerTimes[0].timing.split(":");
         prayerTime.setHours(hours, minutes);
         nextPrayerTime = prayerTime;
+        nextPrayerName = prayerTimes[0].name
         console.log(prayerTime, nextPrayerTime)
     }
 

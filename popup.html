@@ -2,11 +2,19 @@
 <html lang="en">
 <head>
     <title>My Extension</title>
-    <link href="./styles.css" rel="stylesheet">
     <link href="./bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./bootstrap-select.min.css"/>
     <script src="common.js"></script>
     <script src="popup.js"></script>
+    <style>
+        body {
+            width: 400px;
+            height: 300px;
+            background-color: #001100;
+            color: #ffffff;
+        }
+
+    </style>
 </head>
 <body>
 <div class="container">
@@ -18,10 +26,10 @@
         <label for="cities-selector"></label><select class="selectpicker" data-show-subtext="true"
                                                      data-live-search="true" id="cities-selector">
     </select>
-        <span class="help-inline"> Try searching for Cairo</span>
+        <span class="help-inline" id="suggestion-hint"> Try searching for your country</span>
     </div>
 </div>
-<div class="container">
+<div class="container" style="padding-top: 10px">
 
 
     <p><span id="remaining-time" class="text-3xl font-bold underline"></span> remaining till the next prayer <span

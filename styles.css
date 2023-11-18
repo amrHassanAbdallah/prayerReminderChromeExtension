@@ -1,4 +1,7 @@
 body {
     width: 400px;
     height: 300px;
+    background-color: #2b542c;
+    color: #ffffff;
+    border-radius: 10px;
 }
