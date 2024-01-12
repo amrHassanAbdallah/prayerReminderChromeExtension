@@ -17,8 +17,6 @@
   "permissions": [
     "alarms",
     "storage",
-    "activeTab",
-    "scripting",
     "https://api.aladhan.com/*"
   ],
   "content_security_policy": {
