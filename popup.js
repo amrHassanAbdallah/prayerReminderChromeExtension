@@ -21,8 +21,8 @@ async function updateRemainingTime() {
     // Update the HTML page with the remaining minutes
     const remainingTimeElement = document.getElementById("remaining-time");
     remainingTimeElement.innerText = `${remainingMinutes} minutes`;
-    document.getElementById('next-prayer-time').innerText = `(${nextPrayerTime.toLocaleTimeString()})`
-    document.getElementById('next-prayer-name').innerText = `(${nextPrayerName})`
+    document.getElementById('next-prayer-time').innerText = `${formatDate(nextPrayerTime)}`
+    document.getElementById('next-prayer-name').innerText = `${nextPrayerName}`
 }
 
 async function fillTheCitySelector() {
@@ -74,9 +74,10 @@ async function fillPrayersTimings() {
     let tempHolder = ``
     const prayerTimings = await getPrayerTimes()
     for (let prayer of prayerTimings){
+        let time  = parseDate(prayer.timing)
         tempHolder += `<tr>
             <td>${prayer.name}</td>
-            <td>${prayer.timing}</td>
+            <td>${time}</td>
         </tr>`
     }
     tbody.innerHTML = tempHolder

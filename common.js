@@ -107,3 +107,12 @@ function getTodayDate() {
     let nowDate = new Date()
     return nowDate.getFullYear() + '/' + (nowDate.getMonth() + 1) + '/' + nowDate.getDate()
 }
+function parseDate(timing){
+    const prayerTime = new Date();
+    const [hours, minutes] = timing.split(":");
+    prayerTime.setHours(hours, minutes)
+    return formatDate(prayerTime)
+}
+function formatDate(date){
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+}
