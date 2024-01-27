@@ -23,6 +23,19 @@ async function updateRemainingTime() {
     remainingTimeElement.innerText = `${remainingMinutes} minutes`;
     document.getElementById('next-prayer-time').innerText = `${formatDate(nextPrayerTime)}`
     document.getElementById('next-prayer-name').innerText = `${nextPrayerName}`
+
+    markActivePrayer(nextPrayerName);
+
+}
+
+function markActivePrayer(nextPrayerName) {
+    const activePrayerClass = "upcoming";
+    let labeledActivePrayer = document.querySelector('#prayerTimingsTable th.' + activePrayerClass);
+    if (labeledActivePrayer && labeledActivePrayer.id != nextPrayerName) {
+        labeledActivePrayer.classList.remove(activePrayerClass);
+    }else if (!labeledActivePrayer) {
+        document.getElementById(nextPrayerName).classList.add(activePrayerClass);
+    }
 }
 
 async function fillTheCitySelector() {
@@ -75,7 +88,7 @@ async function fillPrayersTimings() {
     const prayerTimings = await getPrayerTimes()
     for (let prayer of prayerTimings){
         let time  = parseDate(prayer.timing)
-        tempHolder += `<tr>
+        tempHolder += `<tr id='${prayer.name}'>
             <td>${prayer.name}</td>
             <td>${time}</td>
         </tr>`
