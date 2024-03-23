@@ -36,27 +36,31 @@ async function set(key, value) {
 }
 
 async function getTheTimes(location) {
-    let [city, country] = location.split(", ")
-    let url = `https://api.aladhan.com/v1/timingsByCity/${getTimingsByCity()}?city=${city}&country=${location}&method=8`
-    console.log(url)
-    fetch(url).then((response) => response.json())
-        .then(async (result) => {
-            console.log("Success:", result);
-            console.log(JSON.stringify(result.data.timings))
-            let times = [];
-            for (let prayer in result.data.timings) {
-                if (FocusedPrayers[prayer]){
-                    times.push({
-                        name: prayer,
-                        timing: result.data.timings[prayer]
-                    })
+    let url = `https://api.aladhan.com/v1/timingsByAddress/${getTimingsByCity()}?address=${location}`
+    return new Promise((resolve, reject) => {
+        console.log(url)
+        fetch(url).then((response) => response.json())
+            .then(async (result) => {
+                console.log("Success:", result);
+                console.log(JSON.stringify(result.data.timings))
+                let times = [];
+                for (let prayer in result.data.timings) {
+                    if (FocusedPrayers[prayer]){
+                        times.push({
+                            name: prayer,
+                            timing: result.data.timings[prayer]
+                        })
+                    }
                 }
-            }
-            times.sort((a, b) => a.timing > b.timing)
-            console.log(times, "yoooooo the sorted data")
-            await set(Config.prayerTimesData, times)
-            await set(Config.prayersDay, getTodayDate())
-        })
+                times.sort((a, b) => a.timing > b.timing)
+                console.log(times, "yoooooo the sorted data")
+                await set(Config.prayerTimesData, times)
+                await set(Config.prayersDay, getTodayDate())
+                resolve(times);
+            })
+
+    });
+    
 }
 
 function getTimingsByCity() {

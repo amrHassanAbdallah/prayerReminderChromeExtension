@@ -7,7 +7,7 @@ let supportedLocations = {
     "Asia": ["Astana, Kazakhstan", "Beijing, China", "Chennai, India", "Colombo, Sri Lanka", "Dhaka, Bangladesh", "Hong Kong, China", "Islamabad, Pakistan", "Jakarta, Indonesia", "Kabul, Afghanistan", "Karachi, Pakistan", "Lahore, Pakistan", "Makhachkala, Dagestan", "Mumbai, India", "New Dellhi, India", "Samarkand, Uzbekistan", "Seoul, South Korea", "Shanghai, China", "Singapore", "Taipei, Taiwan", "Tashkent, Uzbekistan", "Tokyo, Japan", "Ulaanbaatar, Mongolia"],
     "Australia": ["Adelaide, Australia", "Auckland, New Zealand", "Brisbane, Australia", "Darwin, Australia", "Perth, Australia", "Sydney, Australia", "Tasmania, Australia"],
     "Europe": ["Amsterdam, Netherlands", "Belfast, Northern Ireland", "Berlin, Germany", "Birmingham, UK", "Brussels, Belgium", "Bucharest, Romania", "Budapest, Hungary", "Cordoba, Spain", "Dublin, Ireland", "Edinburgh, UK", "Frankfurt, Germany", "Glasgow, UK", "Helsinki, Finland", "Lisbon, Portugal", "London, UK", "Madrid, Spain", "Manchester, UK", "Milan, Italy", "Moscow, Russia", "Munich, Germany", "Naples, Italy", "Oslo, Norway", "Paris, France", "Prague, Czech Republic", "Pristina, Kosovo", "Rome, Italy", "Sarajevo, Bosnia and Herzegovina", "Sofia, Bulgaria", "Stockholm, Sweden", "Tirana, Albania", "Valencia, Spain", "Vienna, Austria", "Zurich, Switzerland"],
-    "Middle East": ["Makkah, Saudi Arabia", "Madinah, Saudi Arabia", "Riyadh, Saudi Arabia", "Dubai, UAE", "Abu Dhabi, UAE", "Sharjah, UAE", "Ajman, UAE", "Ras Al Khaimah, UAE", "Umm Al Quwain, UAE", "Muscat, Oman", "Damascus, Syria", "Aleppo, Syria", "Baghdad, Iraq", "Mosul, Iraq", "Tehran, Iran", "Isfahan, Iran", "Istanbul, Turkey", "Konya, Turkey", "Cairo, Egypt", "Alexandria, Egypt", "Aden, Yemen", "Sanaa, Yemen", "Jerusalem, Palestine"],
+    "Middle East": ["Makkah, Saudi Arabia", "Madinah, Saudi Arabia", "Riyadh, Saudi Arabia", "Dubai, UAE", "Abu Dhabi, UAE", "Sharjah, UAE", "Ajman, UAE", "Ras Al Khaimah, UAE", "Umm Al Quwain, UAE", "Muscat, Oman", "Damascus, Syria", "Aleppo, Syria", "Baghdad, Iraq", "Mosul, Iraq", "Tehran, Iran", "Isfahan, Iran", "Istanbul, Turkey", "Konya, Turkey", "Cairo, Egypt", "Alexandria, Egypt", "Aden, Yemen", "Sanaa, Yemen", "Jerusalem, Palestine", "Doha, Qatar"],
     "North America": ["Chicago, IL, USA", "Denver, CO, USA", "Edmonton, Canada", "Halifax, Canada", "Havana, Cuba", "Honolulu, Hawaii", "Houston, TX, USA", "Los Angeles, CA, USA", "Montreal, Canada", "New York, NY, USA", "Regina, Canada", "Toronto, Canada", "Vancouver, Canada"],
     "South America": ["Buenos Aires, Argentina", "Caracas, Venezuela", "Lima, Peru", "Mexico City, Mexico", "Santiago, Chile", "Sao Paulo, Brazil"]
 }
@@ -25,6 +25,7 @@ async function updateRemainingTime() {
     document.getElementById('next-prayer-name').innerText = `${nextPrayerName}`
 
     markActivePrayer(nextPrayerName);
+    console.log("remaining time updated");
 
 }
 
@@ -60,15 +61,15 @@ function controlTheHintedSearch(IsVisible){
     }
     document.getElementById("suggestion-hint").style.display = mode
 }
-function handleCitySelectorChange(e) {
+async function handleCitySelectorChange(e) {
     const value = e.target.value
     console.log("hamda", value)
     chrome.storage.local.set({selectedValue: value}, function() {
         console.log('Value stored in local storage');
     });
-    getTheTimes(value)
+    await getTheTimes(value)
     controlTheHintedSearch(false)
-    repopulate();
+    await repopulate();
 }
 
 
@@ -83,6 +84,7 @@ async function setThelocationIfSelected() {
 }
 
 async function fillPrayersTimings() {
+    console.log("filling prayer times");
     const tbody = document.querySelector('#prayerTimingsTable tbody')
     let tempHolder = ``
     const prayerTimings = await getPrayerTimes()
@@ -96,15 +98,16 @@ async function fillPrayersTimings() {
     tbody.innerHTML = tempHolder
 }
 
-function repopulate() {
+async function repopulate() {
     fillTheCitySelector();
     setThelocationIfSelected();
-    fillPrayersTimings();
+    await fillPrayersTimings();
     updateRemainingTime();
 }
 
 window.onload = function () {
     repopulate();
+
     setInterval(updateRemainingTime, 60 * 1000);
     document.getElementById('cities-selector').onchange = (event)=>{
         console.log("yoooooooooooooooo",event, event.target.value)

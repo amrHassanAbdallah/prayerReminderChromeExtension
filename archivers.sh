@@ -1,4 +1,5 @@
 #!/bin/bash
+find . -maxdepth 1 -type f -name "archive_*" -exec rm {} \;
 
 # Get the current version from manifest.json
 current_version=$(jq -r .version manifest.json)
